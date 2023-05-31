@@ -127,10 +127,39 @@ def travoltas_busiest_years
   SQL
 end
 
-def andrews_films_and_leads_joins
+def andrews_films_and_leads
   # List the film title and the leading actor for all of the films 'Julie
   # Andrews' played in.
   execute(<<-SQL)
+SELECT
+  movies.title, actors.name
+FROM
+  castings
+JOIN 
+  actors
+ON
+  castings.actor_id = actors.id
+JOIN 
+  movies
+ON 
+  castings.movie_id = movies.id
+WHERE 
+  movies.id IN (
+    SELECT
+      movies.id
+    FROM
+      castings
+    JOIN 
+      actors
+    ON
+      castings.actor_id = actors.id
+    JOIN 
+      movies
+    ON 
+      castings.movie_id = movies.id
+    WHERE
+      actors.name = 'Julie Andrews'
+  ) AND castings.ord = 1 ;
   SQL
 end
 
